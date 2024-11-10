@@ -5,10 +5,17 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, random_split
 import os
 import matplotlib.pyplot as plt
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from itertools import product
+import json
+from torchvision.models import efficientnet_b4
 
-# Задание пути к данным
+# Задание пути к данным и другие настройки
 data_dir = 'Our_training_dataset'
+num_classes = 10
+batch_size = 32
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
 
 # Преобразования для предобработки изображений
 data_transforms = {
@@ -27,65 +34,46 @@ data_transforms = {
 
 # Загрузка данных
 dataset = datasets.ImageFolder(os.path.join(data_dir), transform=data_transforms['train'])
-
-# Разделение данных на тренировочные и валидационные наборы (80% на 20%)
 train_size = int(0.8 * len(dataset))
 val_size = len(dataset) - train_size
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
-
-# Применяем валидационные преобразования для валидационного набора
 val_dataset.dataset.transform = data_transforms['val']
 
-# DataLoader для загрузки данных
-batch_size = 32
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
 
-# Проверка на наличие GPU и перевод модели на устройство
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print(f"Using device: {device}")
-
-# Загрузка предобученной модели EfficientNet-B4
-from torchvision.models import efficientnet_b4
-
-model = efficientnet_b4(pretrained=True)
-num_classes = 10
-
-# Добавление Dropout и изменение классификатора
-model.classifier = nn.Sequential(
-    nn.Dropout(p=0.5),  # Увеличение Dropout
-    nn.Linear(model.classifier[1].in_features, num_classes)
-)
-
-model = model.to(device)
-
-# Функция потерь
-criterion = nn.CrossEntropyLoss()
-
-# Оптимизатор и планировщик уменьшения скорости обучения
-optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-5)
-scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=2, verbose=True)
-
-num_epochs = 10
+# Гиперпараметры для перебора
+hyperparams = {
+    'lr': [0.001, 0.0005],
+    'weight_decay': [1e-5, 1e-4],
+    'dropout': [0.3, 0.5],
+}
 
 
-# Модифицированная функция для обучения модели с сохранением потерь и точности на каждой эпохе
-def train_model(model, train_loader, val_loader, criterion, optimizer, num_epochs=5):
-    model.train()
-    training_loss = []
-    validation_loss = []
-    train_accuracy = []
-    val_accuracy = []
+# Модифицированная функция для обучения модели с возвращением результатов
+def train_and_evaluate(lr, weight_decay, dropout, num_epochs=2):
+    print(f"Начало обучения модели с параметрами: lr={lr}, weight_decay={weight_decay}, dropout={dropout}")
+
+    model = efficientnet_b4(pretrained=True)
+    model.classifier = nn.Sequential(
+        nn.Dropout(p=dropout),
+        nn.Linear(model.classifier[1].in_features, num_classes)
+    )
+    model = model.to(device)
+
+    criterion = nn.CrossEntropyLoss()
+    optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=weight_decay)
+
+    training_loss, validation_loss = [], []
+    train_accuracy, val_accuracy = [], []
 
     for epoch in range(num_epochs):
-        running_loss = 0.0
-        correct_train = 0
-        total_train = 0
+        model.train()
+        running_loss, correct_train, total_train = 0.0, 0, 0
+        print(f"  Эпоха {epoch + 1}/{num_epochs} началась.")
 
-        # Обучение
-        for i, (inputs, labels) in enumerate(train_loader, 1):
+        for inputs, labels in train_loader:
             inputs, labels = inputs.to(device), labels.to(device)
-
             optimizer.zero_grad()
             outputs = model(inputs)
             loss = criterion(outputs, labels)
@@ -97,111 +85,78 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, num_epoch
             correct_train += (preds == labels).sum().item()
             total_train += labels.size(0)
 
-            print(f"Epoch [{epoch + 1}/{num_epochs}], Step [{i}/{len(train_loader)}], Loss: {loss.item():.4f}")
-
-        # Среднее значение потерь и точности на тренировочной выборке за эпоху
-        epoch_loss = running_loss / len(train_loader)
+        epoch_train_loss = running_loss / len(train_loader)
         epoch_train_accuracy = correct_train / total_train
-        training_loss.append(epoch_loss)
+        training_loss.append(epoch_train_loss)
         train_accuracy.append(epoch_train_accuracy)
 
-        # Расчет потерь и точности на валидационной выборке
         val_loss, val_acc = test_model_epoch(model, val_loader, criterion)
         validation_loss.append(val_loss)
         val_accuracy.append(val_acc)
 
-        print(f"Epoch [{epoch + 1}/{num_epochs}] - Training Loss: {epoch_loss:.4f}, Training Accuracy: {epoch_train_accuracy:.4f}, Validation Loss: {val_loss:.4f}, Validation Accuracy: {val_acc:.4f}")
+        print(
+            f"  Эпоха {epoch + 1} завершена: Train Loss={epoch_train_loss:.4f}, Train Accuracy={epoch_train_accuracy:.4f}, "
+            f"Val Loss={val_loss:.4f}, Val Accuracy={val_acc:.4f}")
 
-    print("Обучение завершено!")
-    torch.save(model.state_dict(), 'efficientnet_b4_trained_model_10epoch.pth')
-    print("Модель сохранена как 'efficientnet_b4_trained_model.pth'")
-
-    return training_loss, validation_loss, train_accuracy, val_accuracy
+    print(f"Обучение модели с параметрами lr={lr}, weight_decay={weight_decay}, dropout={dropout} завершено.")
+    return training_loss, validation_loss, train_accuracy, val_accuracy, val_accuracy[-1], model
 
 
-# Вспомогательная функция для оценки потерь и точности на валидационной выборке за каждую эпоху
+# Функция для оценки на каждой эпохе
 def test_model_epoch(model, val_loader, criterion):
     model.eval()
-    running_loss = 0.0
-    correct = 0
-    total = 0
+    running_loss, correct, total = 0.0, 0, 0
     with torch.no_grad():
         for inputs, labels in val_loader:
             inputs, labels = inputs.to(device), labels.to(device)
             outputs = model(inputs)
             loss = criterion(outputs, labels)
             running_loss += loss.item()
-
             _, preds = torch.max(outputs, 1)
             correct += (preds == labels).sum().item()
             total += labels.size(0)
-
     return running_loss / len(val_loader), correct / total
 
 
-# Функция для тестирования модели с расчетом метрик после обучения
-def test_model_final(model, val_loader):
-    model.eval()
-    all_preds = []
-    all_labels = []
+# Обучение и вывод результатов для гиперпараметров
+results = []
+for lr, weight_decay, dropout in product(hyperparams['lr'], hyperparams['weight_decay'], hyperparams['dropout']):
+    print(f"\nЗапуск комбинации гиперпараметров: lr={lr}, weight_decay={weight_decay}, dropout={dropout}")
+    train_loss, val_loss, train_acc, val_acc, final_acc, model = train_and_evaluate(lr, weight_decay, dropout,
+                                                                                    num_epochs=3)
 
-    with torch.no_grad():
-        for i, (inputs, labels) in enumerate(val_loader, 1):
-            inputs, labels = inputs.to(device), labels.to(device)
-            outputs = model(inputs)
-            _, preds = torch.max(outputs, 1)
+    model_filename = f"model_lr{lr}_wd{weight_decay}_do{dropout}.pth"
+    torch.save(model.state_dict(), model_filename)
+    print(f"  Модель сохранена как '{model_filename}'")
 
-            all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
+    results.append((final_acc, (lr, weight_decay, dropout), model, train_loss, val_loss, train_acc, val_acc))
 
-            print(f"Validation Step [{i}/{len(val_loader)}] completed")
+# Сортируем и выводим лучшие комбинации
+results = sorted(results, key=lambda x: x[0], reverse=True)[:5]
+print("\nТоп-5 лучших комбинаций гиперпараметров:")
 
-    accuracy = accuracy_score(all_labels, all_preds)
-    f1 = f1_score(all_labels, all_preds, average='weighted')
-    precision = precision_score(all_labels, all_preds, average='weighted')
-    recall = recall_score(all_labels, all_preds, average='weighted')
+# Построение графиков для лучших моделей
+for rank, (accuracy, params, model, train_loss, val_loss, train_acc, val_acc) in enumerate(results, 1):
+    lr, weight_decay, dropout = params
+    print(
+        f"\nМодель {rank} - lr={lr}, weight_decay={weight_decay}, dropout={dropout} - Accuracy: {accuracy * 100:.2f}%")
 
-    print("\nValidation Metrics:")
-    print(f"Accuracy: {accuracy * 100:.2f}%")
-    print(f"Precision: {precision:.4f}")
-    print(f"Recall: {recall:.4f}")
-    print(f"F1 Score: {f1:.4f}")
-    print("\nClassification Report:\n", classification_report(all_labels, all_preds))
-
-    conf_matrix = confusion_matrix(all_labels, all_preds)
-    print("\nConfusion Matrix:\n", conf_matrix)
-
-    return accuracy, precision, recall, f1, conf_matrix
-
-
-# Функция для построения графиков потерь и точности
-def plot_metrics(train_loss, val_loss, train_accuracy, val_accuracy):
     # График потерь
     plt.figure(figsize=(10, 5))
     plt.plot(range(1, len(train_loss) + 1), train_loss, label="Training Loss")
     plt.plot(range(1, len(val_loss) + 1), val_loss, label="Validation Loss")
     plt.xlabel("Epochs")
     plt.ylabel("Loss")
-    plt.title("Training and Validation Loss per Epoch")
+    plt.title(f"Loss per Epoch for lr={lr}, wd={weight_decay}, dropout={dropout}")
     plt.legend()
     plt.show()
 
     # График точности
     plt.figure(figsize=(10, 5))
-    plt.plot(range(1, len(train_accuracy) + 1), train_accuracy, label="Train Accuracy")
-    plt.plot(range(1, len(val_accuracy) + 1), val_accuracy, label="Validation Accuracy")
+    plt.plot(range(1, len(train_acc) + 1), train_acc, label="Train Accuracy")
+    plt.plot(range(1, len(val_acc) + 1), val_acc, label="Validation Accuracy")
     plt.xlabel("Epochs")
     plt.ylabel("Accuracy")
-    plt.title("Training and Validation Accuracy per Epoch")
+    plt.title(f"Accuracy per Epoch for lr={lr}, wd={weight_decay}, dropout={dropout}")
     plt.legend()
     plt.show()
-
-
-# Обучаем модель и получаем данные о потерях и точности
-training_loss, validation_loss, train_accuracy, val_accuracy = train_model(model, train_loader, val_loader, criterion, optimizer, num_epochs=num_epochs)
-
-# Строим графики потерь и точности на обучающей и валидационной выборках по эпохам
-plot_metrics(training_loss, validation_loss, train_accuracy, val_accuracy)
-
-# Тестируем модель на валидационном наборе после обучения и выводим метрики
-accuracy, precision, recall, f1, conf_matrix = test_model_final(model, val_loader)

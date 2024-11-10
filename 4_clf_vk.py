@@ -28,9 +28,11 @@ data_transforms = transforms.Compose([
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])  # Нормализация
 ])
 
+
 # Список классов в том же порядке, в каком они использовались при обучении
 class_names = ['Birds', 'Cats', 'Dogs', 'Herbivores', 'Horses',
                'Other', 'Predators', 'Primates', 'Reptiles', 'Sea animals']
+
 
 # Функция для загрузки и предобработки одного изображения
 def process_image(image_path):
@@ -38,6 +40,7 @@ def process_image(image_path):
     image = data_transforms(image)  # Применение преобразований
     image = image.unsqueeze(0)  # Добавление дополнительной размерности для батча
     return image
+
 
 # Функция для предсказания
 def predict(image, model):
@@ -48,6 +51,7 @@ def predict(image, model):
         _, preds = torch.max(outputs, 1)  # Получаем индекс класса с максимальной вероятностью
 
     return preds.item()  # Возвращаем индекс предсказанного класса
+
 
 # Функция для создания папок и перемещения изображений
 def create_folders_and_move_images(folder_path, model):

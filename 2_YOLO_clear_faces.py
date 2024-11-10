@@ -2,11 +2,14 @@ import os
 import shutil
 from pathlib import Path
 from ultralytics import YOLO
+import torch
+print(torch.cuda.is_available())
 
 
 def detect_non_animal_objects(input_folder, output_folder, confidence_threshold=0.5):
     # Создаем YOLO модель, принудительно используя CPU
-    model = YOLO('yolov8l.pt')
+    model = YOLO('yolo11x.pt')
+    model.to('cuda')
 
     # Список классов животных, которые мы будем исключать
     animal_classes = {'bird', 'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe'}
