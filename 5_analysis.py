@@ -100,7 +100,7 @@ for user in users_with_age:
 folders = ['Birds', 'Cats', 'Cow', 'Dogs', 'Elephant', 'Giraffe', 'Other', 'People', 'Predators',
            'Primates', 'Rabbit', 'Reptiles', 'Sheep', 'Zebra']
 
-base_path = 'downloaded_images_from_VK — копия/sorted_images'  # Замените на ваш путь
+base_path = 'downloaded_images_from_VK_sorted/sorted_images'  # Замените на ваш путь
 
 # Проходим по каждой папке
 for folder in folders:
@@ -269,7 +269,7 @@ else:
 
 # Путь к csv файлу и базовой папке с изображениями
 csv_file_path = "filtered_users_dataframe.csv"
-base_path = "downloaded_images_from_VK — копия/sorted_images"
+base_path = "downloaded_images_from_VK_sorted/sorted_images"
 
 # Загрузка данных из CSV
 df = pd.read_csv(csv_file_path)
@@ -289,7 +289,6 @@ def find_user_photos(user_id, user_class):
 
 # Группировка пользователей по классам
 grouped = df.groupby('class')
-
 
 # Вывод до 2 фотографий для каждого класса
 for user_class, group in grouped:
@@ -319,10 +318,10 @@ for user_class, group in grouped:
 
             photos_shown += 1
 
-            if photos_shown >= 5:  # Ограничение на 2 фотографии на класс
+            if photos_shown >= 2:  # Ограничение на 2 фотографии на класс
                 break
 
-        if photos_shown >= 5:
+        if photos_shown >= 2:
             break
 
 
