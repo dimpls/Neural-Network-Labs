@@ -5,16 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e914638d-bb83-41e1-8630-c4c8fbf29676" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Neural-Network-Labs.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/csv-editor.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/2_YOLO_clear_faces.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_YOLO_clear_faces.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/3_1_test_custom_model.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/3_efficient.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/4_1_custom_model_vk.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/4_clf_vk.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/custom_model/1.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/custom_model/2.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/custom_model/3.jpg" beforeDir="false" />
