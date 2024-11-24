@@ -1,0 +1,12 @@
+# Исключение папок
+__pycache__/
+node_modules/
+downloaded_images_from_VK_sorted
+Our_training_dataset_new
+
+# Исключение всех файлов в папке
+folder_name/*
+
+# Игнорирование конкретных типов файлов во всей папке
+folder_name/*.jpg
+folder_name/*.png

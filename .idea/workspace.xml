@@ -4,7 +4,40 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e914638d-bb83-41e1-8630-c4c8fbf29676" name="Changes" comment="" />
+    <list default="true" id="e914638d-bb83-41e1-8630-c4c8fbf29676" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/Neural-Network-Labs.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/csv-editor.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/2_YOLO_clear_faces.py" beforeDir="false" afterPath="$PROJECT_DIR$/2_YOLO_clear_faces.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_1_test_custom_model.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/3_efficient.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/4_1_custom_model_vk.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/4_clf_vk.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/model_epoch_30_patience_3.pth" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/training_log_30_epochs.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/training_log_30_epochs_2.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/training_log_30_epochs_3.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_model/training_log_30_epochs_4.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/faculty_names.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/filtered_users_dataframe.csv" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/map.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/map_by_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/org.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resnet50_trained_model_15.pth" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resnet50_trained_model_20.pth" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resnet50_trained_model_newdataset.pth" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/resnet50_trained_model_newdataset_25.pth" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_res50.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Обучение сети.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Построение гистограмм и тп, ответы на вопросы.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Распределение по классам.py" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -17,29 +50,34 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2nKYAE9BkImym9UlOf4m4fuI0g3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;E:/PyCharm Community Edition 2022.3.2/jbr/bin/NN_LAB1&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "E:/GitHub/Neural-Network-Labs",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="E:\PyCharm Community Edition 2022.3.2\jbr\bin\NN_LAB1" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.org_photo">
-    <configuration name="ResNet" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.5_analysis">
+    <configuration name="5_analysis" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="NN_LAB1" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -48,10 +86,10 @@
       </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ResNet.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/5_analysis.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -146,11 +184,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.5_analysis" />
         <item itemvalue="Python.org_photo" />
         <item itemvalue="Python.clf_vk" />
         <item itemvalue="Python.org" />
         <item itemvalue="Python.test_res50" />
-        <item itemvalue="Python.ResNet" />
       </list>
     </recent_temporary>
   </component>

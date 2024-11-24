@@ -13,7 +13,6 @@ def detect_non_animal_objects(input_folder, output_folder, confidence_threshold=
 
     # Список классов животных, которые мы будем исключать
     animal_classes = {'bird', 'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear', 'zebra', 'giraffe'}
-
     # Убедитесь, что папка вывода существует
     Path(output_folder).mkdir(parents=True, exist_ok=True)
 
